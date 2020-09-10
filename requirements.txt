@@ -1,0 +1,9 @@
+requests
+tqdm
+elasticsearch
+jsonlines
+pyyaml
+fasttext==0.9.1
+lsh-for-indexing
+flask
+flask-table

@@ -1,0 +1,13 @@
+runtime: python38
+api_version: 1
+threadsafe: yes
+
+
+env_variables:
+    ELK_SCHEME: http
+    ELK_IP: localhost
+    ELK_PORT: 9200
+    INDEX_NAME: tapuz
+    ADMIN_USER: admin
+    ADMIN_PASSWORD: admin
+    CA_KEY_FILE: C:\ProgramData\Elastic\Elasticsearch\config\root-ca.pem
