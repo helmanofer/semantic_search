@@ -3,7 +3,10 @@ tqdm
 elasticsearch
 jsonlines
 pyyaml
-fasttext==0.9.1
+# fasttext==0.9.1
+fasttext
 lsh-for-indexing
 flask
 flask-table
+gensim
+gdown
