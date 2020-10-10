@@ -12,7 +12,6 @@ from jsonlines import jsonlines
 import logging
 
 from mapping import mapping
-from utils.index import read_tapuz_data
 
 
 class Indexer(object):
@@ -41,7 +40,9 @@ class Indexer(object):
 
     def recreate_index(self):
         print("recreating index")
-        self.es.indices.delete(index=self.index_name, params=dict(ignore_unavailable="true"))
+        self.es.indices.delete(
+            index=self.index_name, params=dict(ignore_unavailable="true")
+        )
         self.es.indices.create(index=self.index_name, body=mapping)
 
     def index_one(self, doc):
@@ -54,7 +55,11 @@ class Indexer(object):
             _id = doc.pop("_id")
             if not _id:
                 continue
-            action = {"_index": self.index_name, "_id": _id, "_source": self.process_doc(doc)}
+            action = {
+                "_index": self.index_name,
+                "_id": _id,
+                "_source": self.process_doc(doc),
+            }
             actions.append(action)
             if len(actions) == self.n:
                 helpers.bulk(self.es, actions)
@@ -73,7 +78,11 @@ class Indexer(object):
         }
 
         r = self.es.update_by_query(
-            self.index_name, body=query, request_timeout=60, refresh=True, wait_for_completion=False
+            self.index_name,
+            body=query,
+            request_timeout=60,
+            refresh=True,
+            wait_for_completion=False,
         )
         logging.info(r)
 

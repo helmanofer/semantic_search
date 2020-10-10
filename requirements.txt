@@ -4,9 +4,8 @@ elasticsearch
 jsonlines
 pyyaml
 # fasttext==0.9.1
-fasttext
-lsh-for-indexing
+# fasttext
 flask
-flask-table
 gensim
-gdown
+# lsh-for-indexing
+# gdown

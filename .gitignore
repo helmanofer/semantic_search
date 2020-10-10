@@ -1,0 +1,6 @@
+*.pyc
+*.xml
+venv
+*.npy
+*.bin
+*.gz

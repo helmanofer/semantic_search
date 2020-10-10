@@ -1,17 +1,15 @@
+from data.tapuz import read_tapuz_data_with_vec
 import os
 from pprint import pprint
 
 import requests
 from requests.auth import HTTPBasicAuth
-from utils.index import read_tapuz_data_with_vec
 from utils.indexer import Indexer
 from utils.conf_util import conf_to_env
 from elasticsearch import Elasticsearch
 
 
 conf_to_env()
-# res = requests.get(url="http://18.219.124.104:9200", auth=HTTPBasicAuth("admin", "admin"),  verify=False)
-# pprint(res.json())
 
 
 def index():
