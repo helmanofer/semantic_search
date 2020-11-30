@@ -20,14 +20,14 @@ class AnnoyLevelSearch(SearchEngine):
                                             val_serializer=json.dumps,
                                             val_deserializer=json.loads)
         self.text_store = LevelTextStore(name)
-        self.vec_store = AnnoyVectorStore(name, embedding.dim, 
+        self.vec_store = AnnoyVectorStore(name, embedding.dim,
                                           self.conf['metric'])
         self.bhem = embedding
 
     def search(self, text: str) -> SearchResults:
         vec = self.bhem.infer([text])[0]
         logger.info(f"search vec {vec}")
-        ret = self.vec_store.knn(vec, 20)
+        ret = self.vec_store.knn(np.array(vec), 20)
 
         items = []
         for ix, score in zip(*ret):

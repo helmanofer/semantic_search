@@ -13,7 +13,6 @@ class SearchEngine(ABC):
     def search(self, text: str) -> SearchResults:
         pass
 
-
     @abstractmethod
     def index(self, index_docs: IndexedDocs):
         pass

@@ -15,7 +15,8 @@ class BertHebEmbeddingModel(Embedding):
         super().__init__(768)
         self.model_name = 'TurkuNLP/wikibert-base-he-cased'
         self.tokenizer = BertTokenizer.from_pretrained(self.model_name)
-        self.model = BertModel.from_pretrained(self.model_name, output_hidden_states=True)
+        self.model = BertModel.from_pretrained(self.model_name, 
+                                               output_hidden_states=True)
 
     def tokenize(self, text: Union[str, List[str]]):
         tok_text = self.tokenizer.tokenize(text)
@@ -47,7 +48,7 @@ class LabseEmbeddingModel(Embedding):
 
     @staticmethod
     def mean_pooling(model_output, attention_mask):
-        token_embeddings = model_output[0]  #First element of model_output contains all token embeddings
+        token_embeddings = model_output[0]  # First element of model_output contains all token embeddings
         input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
         sum_embeddings = torch.sum(token_embeddings * input_mask_expanded, 1)
         sum_mask = torch.clamp(input_mask_expanded.sum(1), min=1e-9)

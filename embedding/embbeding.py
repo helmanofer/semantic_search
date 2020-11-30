@@ -21,4 +21,4 @@ class DummyEmbedding(Embedding):
         super().__init__(768)
 
     def infer(self, sentences: Sentences) -> Vectors:
-        return None
+        return []

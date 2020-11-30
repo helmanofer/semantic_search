@@ -1,5 +1,4 @@
 from logging import INFO
-from utils.conf_util import conf_to_env, read_app_yaml
 from search_engine import searcher
 from search_engine.search_engine import SearchEngine
 from utils.types import SearchResults
@@ -7,10 +6,7 @@ from flask import Flask, render_template, jsonify
 import logging
 
 
-# conf_to_env()
-
 logging.basicConfig(level=INFO)
-conf = read_app_yaml()
 se: SearchEngine = searcher
 
 columns = [
