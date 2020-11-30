@@ -1,13 +1,10 @@
 import numpy as np
 from indexed_docs.indexed_docs import IndexedDocs
-import os
 from search_engine.search_engine import SearchEngine
 from elasticsearch import Elasticsearch, helpers
 from utils.types import SearchResults
 from flask import json
 from lsh.random_projection import LshGaussianRandomProjection
-import requests
-from requests.auth import HTTPBasicAuth
 from embedding import embedding
 from search_engine.elk_mapping import mapping
 
@@ -15,6 +12,7 @@ from search_engine.elk_mapping import mapping
 class ElkSearch(SearchEngine):
     def __init__(self, name) -> None:
         super().__init__(name)
+        self.conf = self.conf['elk']
         self.model = embedding
         self.lsh_g = LshGaussianRandomProjection(
             vector_dimension=embedding.dim, bucket_size=4,
@@ -27,12 +25,12 @@ class ElkSearch(SearchEngine):
 
     def _init_es(self):
         self.es = Elasticsearch(
-            os.environ["ELK_IP"],
-            http_auth=(os.environ["ADMIN_USER"],
-                       os.environ["ADMIN_PASSWORD"]),
-            ssl_context=os.environ["ELK_SCHEME"],
+            self.conf["ELK_IP"],
+            http_auth=(self.conf["ADMIN_USER"],
+                       self.conf["ADMIN_PASSWORD"]),
+            ssl_context=self.conf["ELK_SCHEME"],
             scheme="http",
-            port=os.environ["ELK_PORT"],
+            port=self.conf["ELK_PORT"],
         )
 
     def recreate_index(self):

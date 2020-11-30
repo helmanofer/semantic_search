@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from utils.conf_util import read_app_yaml
 from indexed_docs.indexed_docs import IndexedDocs
 from utils.types import SearchResults
 
@@ -6,6 +7,7 @@ from utils.types import SearchResults
 class SearchEngine(ABC):
     def __init__(self, name) -> None:
         self.name: str = name
+        self.conf = read_app_yaml()['searcher']
 
     @abstractmethod
     def search(self, text: str) -> SearchResults:

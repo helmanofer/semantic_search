@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 from embedding import embedding
 from indexed_docs.indexed_docs import IndexedDocs
@@ -6,7 +7,6 @@ from search_engine.search_engine import SearchEngine
 from utils.types import SearchResults
 from store.vector_store import AnnoyVectorStore
 from store.text_store import LevelTextStore
-import logging
 
 
 logger = logging.getLogger(__name__)
@@ -14,11 +14,14 @@ logger = logging.getLogger(__name__)
 
 class AnnoyLevelSearch(SearchEngine):
     def __init__(self, name) -> None:
+        super().__init__(name)
+        self.conf = self.conf['annoy']
         self.chunked_store = LevelTextStore(f"{name}_chunks",
                                             val_serializer=json.dumps,
                                             val_deserializer=json.loads)
         self.text_store = LevelTextStore(name)
-        self.vec_store = AnnoyVectorStore(name, embedding.dim)
+        self.vec_store = AnnoyVectorStore(name, embedding.dim, 
+                                          self.conf['metric'])
         self.bhem = embedding
 
     def search(self, text: str) -> SearchResults:

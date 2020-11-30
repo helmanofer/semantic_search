@@ -9,3 +9,4 @@ flask
 gensim
 # lsh-for-indexing
 # gdown
+hydra-core
