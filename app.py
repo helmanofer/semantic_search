@@ -1,16 +1,19 @@
 from logging import INFO
-from search_engine.se import SearchEngine
+from utils.conf_util import conf_to_env, read_app_yaml
+from search_engine.elk_search_engine import ElkSearch
+from search_engine.annoy_level_search_engine import AnnoyLevelSearch
+from search_engine.search_engine import SearchEngine
 from utils.types import SearchResults
 # from search_engine.elk import ElkSearch
-from search_engine.annoy_level import AnnoyLevelSearch
 from flask import Flask, render_template, jsonify
 import logging
 
+conf_to_env()
 
 logging.basicConfig(level=INFO)
-
-# se: SearchEngine = ElkSearch()
-se2: SearchEngine = AnnoyLevelSearch()
+conf = read_app_yaml()
+se: SearchEngine = ElkSearch(conf['name'])
+# se2: SearchEngine = AnnoyLevelSearch()
 
 columns = [
     {
@@ -45,7 +48,7 @@ def search2(query=None):
     if not query:
         return render_template("search.html", data=[], columns=columns)
     app.logger.info(f"got query: {query}")
-    items: SearchResults = se2.search(query)
+    items: SearchResults = se.search(query)
     app.logger.info(f"got data {items}")
     return jsonify(items)
 

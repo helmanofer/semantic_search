@@ -2,6 +2,9 @@ import os
 import yaml
 
 from utils.common import get_project_root
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def read_app_yaml() -> dict:
@@ -15,6 +18,7 @@ def read_app_yaml() -> dict:
 def conf_to_env():
     data = read_app_yaml()
     for k, v in data["env_variables"].items():
+        logger.info(f"adding {k, v}")
         os.environ[k] = str(v)
 
 

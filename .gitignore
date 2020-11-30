@@ -4,3 +4,9 @@ venv
 *.npy
 *.bin
 *.gz
+data/
+.idea
+.vscode
+models/
+sandbox/
+sandbox/

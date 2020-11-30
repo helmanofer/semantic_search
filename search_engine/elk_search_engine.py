@@ -1,0 +1,124 @@
+import numpy as np
+from indexed_docs.indexed_docs import IndexedDocs
+import os
+from search_engine.search_engine import SearchEngine
+from elasticsearch import Elasticsearch, helpers
+from utils.types import SearchResults
+from flask import json
+from lsh.random_projection import LshGaussianRandomProjection
+import requests
+from requests.auth import HTTPBasicAuth
+from embedding import embedding
+from search_engine.elk_mapping import mapping
+
+
+class ElkSearch(SearchEngine):
+    def __init__(self, name) -> None:
+        super().__init__(name)
+        self.model = embedding
+        self.lsh_g = LshGaussianRandomProjection(
+            vector_dimension=embedding.dim, bucket_size=4,
+            num_of_buckets=40, seed=4
+        )
+        self.es: Elasticsearch
+        self._init_es()
+        self.lsh_g.fit()
+        self.n = 10
+
+    def _init_es(self):
+        self.es = Elasticsearch(
+            os.environ["ELK_IP"],
+            http_auth=(os.environ["ADMIN_USER"],
+                       os.environ["ADMIN_PASSWORD"]),
+            ssl_context=os.environ["ELK_SCHEME"],
+            scheme="http",
+            port=os.environ["ELK_PORT"],
+        )
+
+    def recreate_index(self):
+        print("recreating index")
+        self.es.indices.delete(
+            index=self.name, params=dict(ignore_unavailable="true")
+        )
+        self.es.indices.create(index=self.name, body=mapping)
+
+    def index(self, index_docs: IndexedDocs):
+
+        def iterarte():
+            for doc in index_docs:
+                action = {
+                    "_index": self.name,
+                    "_id": doc.id,
+                    "_source": {
+                        "text": doc.text,
+                        "paragraphs": [
+                            {
+                                "par_text": p.text,
+                                "par_tokens": p.text.split(),
+                                # "par_vector": p.vector,
+                                "lsh": " ".join(self.lsh_g.indexable_transform(
+                                    np.array(p.vector, dtype=np.float))
+                                    )
+                            }
+                            for p in doc.chunks
+                        ],
+                    }
+                }
+                yield action
+        helpers.bulk(self.es, iterarte(), chunk_size=self.n)
+        self.es.indices.refresh(index=self.name)
+
+    def infer(self, text: str):
+        q_vec = self.model.infer([text])[0]
+        lsh = " ".join(self.lsh_g.indexable_transform(q_vec))
+        return lsh
+
+    def search(self, text: str) -> SearchResults:
+        lsh = self.infer(text)
+
+        q = {
+            "stored_fields": [],
+            "query": {
+                "nested": {
+                    "path": "paragraphs",
+                    "query": {
+                        "match": {
+                            "paragraphs.lsh": {
+                                "query": lsh,
+                                "minimum_should_match": "40%",
+                            }
+                        }
+                    },
+                    "score_mode": "avg",
+                }
+            },
+            "highlight": {
+                "no_match_size": 40,
+                "pre_tags": ["<mark>"],
+                "post_tags": ["</mark>"],
+                "highlight_query": {"match": {"text": text}},
+                "fields": {"text": {"type": "unified"}},
+            },
+        }
+
+        jres = self.es.search(index=self.name, body=q)
+
+        print(json.dumps(q, indent=" "))
+        # res = requests.get(
+        #     url="http://127.0.0.1:9200/tapuz/_search",
+        #     json=q,
+        #     auth=HTTPBasicAuth("admin", "admin"),
+        #     verify=False,
+        # )
+
+        items = []
+        # jres = res.json()
+        for r in jres["hits"]["hits"]:
+            items.append(
+                dict(
+                    id=r["_id"],
+                    text=" ... ".join(r.get("highlight", {}).get("text", [])),
+                )
+            )
+
+        return items

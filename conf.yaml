@@ -2,12 +2,18 @@ runtime: python38
 api_version: 1
 threadsafe: yes
 
+embedding: labse
+name: haaretz_test
 
 env_variables:
     ELK_SCHEME: http
-    ELK_IP: localhost
+    # ELK_IP: localhost
+    ELK_USE_SSL: false
+    ELK_IP: semantic-search-7336829871.eu-west-1.bonsaisearch.net
     ELK_PORT: 9200
-    INDEX_NAME: tapuz
-    ADMIN_USER: admin
-    ADMIN_PASSWORD: admin
-    CA_KEY_FILE: C:\ProgramData\Elastic\Elasticsearch\config\root-ca.pem
+    INDEX_NAME: haaretz
+    # ADMIN_USER: admin
+    # ADMIN_PASSWORD: admin
+    ADMIN_USER: zapa4x3cwz
+    ADMIN_PASSWORD: lxi1rslt7a
+    # CA_KEY_FILE: C:\ProgramData\Elastic\Elasticsearch\config\root-ca.pem

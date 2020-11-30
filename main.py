@@ -6,6 +6,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 from utils.indexer import Indexer
 from utils.conf_util import conf_to_env
+
 from elasticsearch import Elasticsearch
 
 

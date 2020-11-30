@@ -1,9 +1,9 @@
 mapping = {
     "settings": {
-        "index": {
-            "knn": True,
-            "knn.space_type": "cosinesimil"
-        },
+        # "index": {
+        #     "knn": True,
+        #     "knn.space_type": "cosinesimil"
+        # },
         "analysis": {
             "analyzer": {
                 "analyzer_shingle": {
@@ -39,12 +39,12 @@ mapping = {
             },
             "paragraphs": {
                 "type": "nested",
-                "properties": {
-                    "par_vector": {
-                        "type": "knn_vector",
-                        "dimension": 300
-                    }
-                }
+                # "properties": {
+                #     "par_vector": {
+                #         "type": "knn_vector",
+                #         "dimension": 768
+                #     }
+                # }
             }
         }
     }
