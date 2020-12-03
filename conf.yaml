@@ -16,8 +16,8 @@ searcher:
         ELK_IP: semantic-search-7336829871.eu-west-1.bonsaisearch.net
         ELK_PORT: 9200
         INDEX_NAME: haaretz
-        ADMIN_USER: zapa4x3cwz
-        ADMIN_PASSWORD: lxi1rslt7a
+        ADMIN_USER: 0000
+        ADMIN_PASSWORD: pppp
     annoy:
         metric: angular
         
