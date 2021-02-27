@@ -4,9 +4,17 @@ elasticsearch
 jsonlines
 pyyaml
 # fasttext==0.9.1
-# fasttext
+fasttext
 flask
 gensim
-# lsh-for-indexing
-# gdown
-hydra-core
+lsh-for-indexing
+fastapi
+uvicorn
+jinja2
+aiofiles
+transformers[torch]
+torch
+torchvision
+torchaudio
+scipy
+numpy

@@ -1,15 +1,15 @@
 import numpy as np
 from indexed_docs.indexed_docs import IndexedDocs
-from search_engine.search_engine import SearchEngine
+from searcher.searcher import Searcher
 from elasticsearch import Elasticsearch, helpers
 from utils.types import SearchResults
 from flask import json
 from lsh.random_projection import LshGaussianRandomProjection
-from embedding import embedding
-from search_engine.elk_mapping import mapping
+from embeddings import embedding
+from searcher.elk_mapping import mapping
 
 
-class ElkSearch(SearchEngine):
+class ElkSearch(Searcher):
     def __init__(self, name) -> None:
         super().__init__(name)
         self.conf = self.conf['elk']

@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass
 from typing import List
-from embedding.embbeding import Vector
+from embeddings.embeddings import Vector
 import json
 from text_processors.chunk import Chunk
 from text_processors.split import Split

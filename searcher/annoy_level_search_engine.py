@@ -1,9 +1,9 @@
 import logging
 import numpy as np
-from embedding import embedding
+from embeddings import embedding
 from indexed_docs.indexed_docs import IndexedDocs
 import json
-from search_engine.search_engine import SearchEngine
+from searcher.searcher import Searcher
 from utils.types import SearchResults
 from store.vector_store import AnnoyVectorStore
 from store.text_store import LevelTextStore
@@ -12,7 +12,7 @@ from store.text_store import LevelTextStore
 logger = logging.getLogger(__name__)
 
 
-class AnnoyLevelSearch(SearchEngine):
+class AnnoyLevelSearch(Searcher):
     def __init__(self, name) -> None:
         super().__init__(name)
         self.conf = self.conf['annoy']

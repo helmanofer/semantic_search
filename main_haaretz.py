@@ -7,8 +7,8 @@ from indexed_docs.indexed_doc import IndexedDocJsonWithEmbedding
 from typing import Iterable
 
 from tqdm import tqdm
-from search_engine.annoy_level_search_engine import AnnoyLevelSearch
-from search_engine.elk_search_engine import ElkSearch
+from searcher.annoy_level_search_engine import AnnoyLevelSearch
+from searcher.elk_search_engine import ElkSearch
 
 
 conf_to_env()

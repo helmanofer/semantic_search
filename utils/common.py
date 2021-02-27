@@ -8,11 +8,11 @@ def get_project_root() -> Path:
     return Path(__file__).parent.parent
 
 
-def read_all_files(dir, extension: str):
+def list_all_files(directory, extension: str):
     """
     dir: directory with * in the pattern
     """
-    return glob.glob(f"{dir}/*.{extension}")
+    return glob.glob(f"{directory}/*.{extension}")
 
 
 def split_list_to_lists_w_overlapping(

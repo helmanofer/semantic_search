@@ -1,13 +1,19 @@
 from logging import INFO
-from search_engine import searcher
-from search_engine.search_engine import SearchEngine
+
+import uvicorn
+from fastapi import FastAPI
+from starlette.templating import Jinja2Templates
+
+from searcher import searcher
+from searcher.searcher import Searcher
 from utils.types import SearchResults
-from flask import Flask, render_template, jsonify
 import logging
 
 
 logging.basicConfig(level=INFO)
-se: SearchEngine = searcher
+logger = logging.getLogger()
+
+se: Searcher = searcher
 
 columns = [
     {
@@ -22,19 +28,21 @@ columns = [
     },
 ]
 
-app = Flask(__name__)
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 
-@app.route("/search")
-@app.route("/search/<query>")
-def search(query=None):
+@app.get("/search")
+@app.get("/search/{query}")
+def search(query: str = None):
     if not query:
-        return render_template("search.html", data=[], columns=columns)
-    app.logger.info(f"got query: {query}")
+        return templates.TemplateResponse("search.html", dict(data=[], columns=columns))
+        # return render_template("search.html", )
+    logger.info(f"got query: {query}")
     items: SearchResults = se.search(query)
-    app.logger.info(f"got data {items}")
-    return jsonify(items)
+    logger.info(f"got data {items}")
+    return items
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=False)
+    uvicorn.run(app)

@@ -7,7 +7,7 @@ Vector = List[float]
 Vectors = List[Vector]
 
 
-class Embedding(ABC):
+class Embeddings(ABC):
     def __init__(self, dim: int) -> None:
         self.dim = dim
 
@@ -16,7 +16,7 @@ class Embedding(ABC):
         pass
 
 
-class DummyEmbedding(Embedding):
+class DummyEmbeddings(Embeddings):
     def __init__(self) -> None:
         super().__init__(768)
 

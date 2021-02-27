@@ -4,7 +4,7 @@ from indexed_docs.indexed_docs import IndexedDocs
 from utils.types import SearchResults
 
 
-class SearchEngine(ABC):
+class Searcher(ABC):
     def __init__(self, name) -> None:
         self.name: str = name
         self.conf = read_app_yaml()['searcher']

@@ -1,4 +1,6 @@
-from embedding.embbeding import Embedding, Sentences, Vectors
+import os
+
+from embeddings.embeddings import Embeddings, Sentences, Vectors
 from typing import List, Union
 from scipy.spatial.distance import cosine
 from transformers import BertTokenizer, BertModel
@@ -6,11 +8,12 @@ import torch
 import logging
 from transformers import AutoTokenizer, AutoModel
 
+from utils.common import get_project_root
 
 logger = logging.getLogger(__name__)
 
 
-class BertHebEmbeddingModel(Embedding):
+class BertHebEmbeddings(Embeddings):
     def __init__(self) -> None:
         super().__init__(768)
         self.model_name = 'TurkuNLP/wikibert-base-he-cased'
@@ -24,8 +27,8 @@ class BertHebEmbeddingModel(Embedding):
         return tok_text
 
     def infer(self, sentences: Sentences) -> Vectors:
-        self.tokenize(text=text[0])
-        tok_ids = self.tokenizer(text, max_length=64, padding="max_length")
+        self.tokenize(text=sentences[0])
+        tok_ids = self.tokenizer(sentences, max_length=64, padding="max_length")
         logger.info(f"tokenized ids: {tok_ids}")
         tokens_tensor = torch.tensor(tok_ids['input_ids'])
         segments_tensors = torch.tensor(tok_ids['attention_mask'])
@@ -39,10 +42,12 @@ class BertHebEmbeddingModel(Embedding):
         return sentence_embedding
 
 
-class LabseEmbeddingModel(Embedding):
+class LabseEmbeddings(Embeddings):
     def __init__(self) -> None:
         super().__init__(768)
         self.tokenizer = AutoTokenizer.from_pretrained("pvl/labse_bert",
+                                                       resume_download=True,
+                                                       cache_dir=os.path.join(get_project_root(), "models"),
                                                        do_lower_case=False)
         self.model = AutoModel.from_pretrained("pvl/labse_bert")
 
@@ -68,7 +73,7 @@ class LabseEmbeddingModel(Embedding):
 
 
 def test():
-    bhem = BertHebEmbeddingModel()
+    bhem = BertHebEmbeddings()
     vecs = bhem.infer(["אני פורים שמח ומבדח", "הלא רק פעם בשנה אבוא להתארח", "יצחק רבין נרצח בכיכר מלכי ישראל"])
     print(1 - cosine(vecs[0], vecs[1]))
     print(1 - cosine(vecs[0], vecs[2]))

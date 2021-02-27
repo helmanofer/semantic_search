@@ -3,21 +3,22 @@ api_version: 1
 threadsafe: yes
 
 name: haaretz_test
-embedding: 
-    type: labse
-    labse:
+embeddings:
+    model_path: ./models
+    class: LabseEmbeddings
+    args:
         gpu: false
         
 searcher: 
-    type: elk
-    elk:
+    class: ElkSearch
+    args:
         ELK_SCHEME: http
         ELK_USE_SSL: false
-        ELK_IP: semantic-search-7336829871.eu-west-1.bonsaisearch.net
+        ELK_IP: 127.0.0.1
         ELK_PORT: 9200
         INDEX_NAME: haaretz
         ADMIN_USER: 0000
         ADMIN_PASSWORD: pppp
-    annoy:
-        metric: angular
+#    annoy:
+#        metric: angular
         
