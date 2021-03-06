@@ -4,6 +4,8 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.templating import Jinja2Templates
 
+from indexed_docs.indexed_doc import IndexedDoc
+from indexed_docs.indexed_docs import IndexedDocs
 from searcher import searcher
 from searcher.searcher import Searcher
 from utils.types import SearchResults
@@ -42,6 +44,16 @@ def search(query: str = None):
     items: SearchResults = se.search(query)
     logger.info(f"got data {items}")
     return items
+
+
+docs = IndexedDocs()
+
+
+@app.post("/index/")
+def index(doc: IndexedDoc):
+    logger.info(f"got doc: {doc}")
+    docs.add_doc(doc)
+    searcher.index(docs)
 
 
 if __name__ == "__main__":

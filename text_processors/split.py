@@ -7,14 +7,13 @@ class Split(ABC):
         pass
 
     @abstractmethod
-    def __call__(self, text: List[str]) -> Iterator[List[str]]:
+    def __call__(self, text: str) -> List[str]:
         pass
 
 
-class WhiteSpaceSplite(Split):
-    def __init__(self, chunk_length: int, overlap: int) -> None:
-        self.overlap = overlap
-        self.chunk_length = chunk_length
+class WhiteSpaceSplit(Split):
+    def __init__(self) -> None:
+        super().__init__()
 
     def __call__(self, text: str) -> List[str]:
         return text.split()

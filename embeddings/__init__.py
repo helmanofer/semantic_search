@@ -3,7 +3,8 @@ __all__ = [
     'DummyEmbeddings',
     'BertHebEmbeddings',
     'Embeddings',
-    'FastTextEmbeddings'
+    'FastTextEmbeddings',
+    'embedding'
 ]
 
 from embeddings.embeddings import DummyEmbeddings, Embeddings

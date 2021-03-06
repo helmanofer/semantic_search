@@ -1,9 +1,9 @@
 import numpy as np
+from numpy import float32
 from indexed_docs.indexed_docs import IndexedDocs
 from searcher.searcher import Searcher
 from elasticsearch import Elasticsearch, helpers
-from utils.types import SearchResults
-from flask import json
+from utils.types import SearchResults, SearchResult
 from lsh.random_projection import LshGaussianRandomProjection
 from embeddings import embedding
 from searcher.elk_mapping import mapping
@@ -12,7 +12,7 @@ from searcher.elk_mapping import mapping
 class ElkSearch(Searcher):
     def __init__(self, name) -> None:
         super().__init__(name)
-        self.conf = self.conf['elk']
+        self.conf = self.conf['args']
         self.model = embedding
         self.lsh_g = LshGaussianRandomProjection(
             vector_dimension=embedding.dim, bucket_size=4,
@@ -41,9 +41,8 @@ class ElkSearch(Searcher):
         self.es.indices.create(index=self.name, body=mapping)
 
     def index(self, index_docs: IndexedDocs):
-
         def iterarte():
-            for doc in index_docs:
+            for doc in index_docs.get_bulk():
                 action = {
                     "_index": self.name,
                     "_id": doc.id,
@@ -55,7 +54,7 @@ class ElkSearch(Searcher):
                                 "par_tokens": p.text.split(),
                                 # "par_vector": p.vector,
                                 "lsh": " ".join(self.lsh_g.indexable_transform(
-                                    np.array(p.vector, dtype=np.float))
+                                    np.array(p.embeddings, dtype=float32))
                                     )
                             }
                             for p in doc.chunks
@@ -110,13 +109,8 @@ class ElkSearch(Searcher):
         # )
 
         items = []
-        # jres = res.json()
         for r in jres["hits"]["hits"]:
-            items.append(
-                dict(
-                    id=r["_id"],
-                    text=" ... ".join(r.get("highlight", {}).get("text", [])),
-                )
-            )
+            d = SearchResult(id=r["_id"], text=" ... ".join(r.get("highlight", {}).get("text", [])))
+            items.append(d)
 
         return items

@@ -15,9 +15,7 @@ def list_all_files(directory, extension: str):
     return glob.glob(f"{directory}/*.{extension}")
 
 
-def split_list_to_lists_w_overlapping(
-    list_: list, group_size: int, overlap_size: int
-) -> List[list]:
+def split_list_to_lists_w_overlapping(list_: list, group_size: int, overlap_size: int) -> List[list]:
     return [
         list_[i: i + group_size]
         for i in range(0, len(list_), group_size - overlap_size)

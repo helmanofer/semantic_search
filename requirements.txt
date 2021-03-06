@@ -5,7 +5,6 @@ jsonlines
 pyyaml
 # fasttext==0.9.1
 fasttext
-flask
 gensim
 lsh-for-indexing
 fastapi
@@ -18,3 +17,7 @@ torchvision
 torchaudio
 scipy
 numpy
+starlette
+annoy
+plyvel
+pydantic

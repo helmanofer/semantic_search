@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Generator, Iterable, Tuple
 from utils.common import get_project_root, lambda_x_x
-import plyvel
 from tqdm import tqdm
 
 
@@ -26,6 +25,7 @@ class TextStore(ABC):
 class LevelTextStore(TextStore):
     def __init__(self, name: str, val_serializer=None,
                  val_deserializer=None) -> None:
+        import plyvel
         self.name = name
         p = get_project_root()
         p = p.joinpath("data").joinpath(f"{self.name}.leveldb")

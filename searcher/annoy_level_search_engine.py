@@ -4,7 +4,7 @@ from embeddings import embedding
 from indexed_docs.indexed_docs import IndexedDocs
 import json
 from searcher.searcher import Searcher
-from utils.types import SearchResults
+from utils.types import SearchResults, SearchResult
 from store.vector_store import AnnoyVectorStore
 from store.text_store import LevelTextStore
 
@@ -32,7 +32,7 @@ class AnnoyLevelSearch(Searcher):
         items = []
         for ix, score in zip(*ret):
             t = self.chunked_store.get(ix)
-            items.append(dict(id=ix, text=f" ... {t['text']} ... "))
+            items.append(SearchResult(id=ix, text=f" ... {t['text']} ... "))
             t["text"] = t["text"][::-1]
             logger.info(f"{ix}, {score}, {t}")
 

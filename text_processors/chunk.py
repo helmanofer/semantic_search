@@ -16,6 +16,7 @@ class Chunk(ABC):
 
 class OverlappingFixedSizeChunk(Chunk):
     def __init__(self, chunk_length: int, overlap: int) -> None:
+        super().__init__()
         self.overlap = overlap
         self.chunk_length = chunk_length
 

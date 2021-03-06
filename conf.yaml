@@ -9,16 +9,16 @@ embeddings:
     args:
         gpu: false
         
-searcher: 
+searcher:
     class: ElkSearch
     args:
         ELK_SCHEME: http
         ELK_USE_SSL: false
-        ELK_IP: 127.0.0.1
+        ELK_IP: localhost
         ELK_PORT: 9200
         INDEX_NAME: haaretz
-        ADMIN_USER: 0000
-        ADMIN_PASSWORD: pppp
+        ADMIN_USER: admin
+        ADMIN_PASSWORD: admin
 #    annoy:
 #        metric: angular
         

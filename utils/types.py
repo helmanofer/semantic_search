@@ -6,4 +6,4 @@ class SearchResult(TypedDict):
     text: str
 
 
-SearchResults = List[TypedDict]
+SearchResults = List[SearchResult]

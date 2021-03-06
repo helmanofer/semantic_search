@@ -1,28 +1,21 @@
+from indexed_docs.indexed_doc import IndexedDoc
 from text_processors.chunk import Chunk
 from text_processors.split import Split
-from indexed_docs.indexed_doc import IndexedDoc
-from typing import Iterable, Type, Union
+from typing import Iterable, Type, Union, List, Optional
 
 
 class IndexedDocs:
-    def __init__(self,
-                 indexed_doc: Type[IndexedDoc],
-                 split: Union[Split, None],
-                 chunk: Union[Chunk, None]
-                 ) -> None:
+    def __init__(self) -> None:
         self._doc_iter = None
-        self.indexed_doc = indexed_doc
-        self.split = split
-        self.chunk = chunk
+        self.indexed_docs: list = []
+        self.bulk_size: int = 100
 
-    @property
-    def iter(self):
-        return self._doc_iter
+    def add_doc(self, doc: IndexedDoc):
+        self.indexed_docs.append(doc)
 
-    @iter.setter
-    def iter(self, iter: Iterable):
-        self._doc_iter = iter
-
-    def __iter__(self):
-        for doc in self._doc_iter:
-            yield self.indexed_doc(doc, self.split, self.chunk)
+    def get_bulk(self) -> List[IndexedDoc]:
+        if len(self.indexed_docs) < self.bulk_size:
+            yield []
+        else:
+            yield self.indexed_docs
+            self.indexed_docs = []

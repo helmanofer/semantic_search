@@ -2,15 +2,17 @@ __all__ = [
     'ElkSearch',
     'AnnoyLevelSearch',
     'Searcher',
+    'searcher',
+    'embedding'
 ]
 
-
+from embeddings import embedding
 from searcher.elk_search_engine import ElkSearch
 from searcher.annoy_level_search_engine import AnnoyLevelSearch
 from searcher.searcher import Searcher
 from utils.conf_util import read_app_yaml
 
-conf = read_app_yaml()['searcher']
+conf = read_app_yaml()
 name = conf['name']
 sconf = conf['searcher']
 
