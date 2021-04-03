@@ -4,7 +4,7 @@ from embeddings import embedding
 from indexed_docs.indexed_docs import IndexedDocs
 import json
 from searcher.searcher import Searcher
-from utils.types import SearchResults, SearchResult
+from utils.model import SearchResults, SearchResult
 from store.vector_store import AnnoyVectorStore
 from store.text_store import LevelTextStore
 

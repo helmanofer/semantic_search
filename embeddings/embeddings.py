@@ -1,10 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import List
 
-
-Sentences = List[str]
-Vector = List[float]
-Vectors = List[Vector]
+from utils.model import Sentences, Vectors
 
 
 class Embeddings(ABC):

@@ -1,12 +1,15 @@
+import json
+
 import numpy as np
 from numpy import float32
 from indexed_docs.indexed_docs import IndexedDocs
-from searcher.searcher import Searcher
 from elasticsearch import Elasticsearch, helpers
-from utils.types import SearchResults, SearchResult
+
+from searcher.searcher import Searcher
+from templates.elk_mapping import Mapping
+from utils.model import SearchResults, SearchResult
 from lsh.random_projection import LshGaussianRandomProjection
 from embeddings import embedding
-from searcher.elk_mapping import mapping
 
 
 class ElkSearch(Searcher):
@@ -38,7 +41,10 @@ class ElkSearch(Searcher):
         self.es.indices.delete(
             index=self.name, params=dict(ignore_unavailable="true")
         )
-        self.es.indices.create(index=self.name, body=mapping)
+        self.es.indices.create(index=self.name, body=Mapping.mapping)
+
+    def commit(self):
+        pass
 
     def index(self, index_docs: IndexedDocs):
         def iterarte():
@@ -55,13 +61,14 @@ class ElkSearch(Searcher):
                                 # "par_vector": p.vector,
                                 "lsh": " ".join(self.lsh_g.indexable_transform(
                                     np.array(p.embeddings, dtype=float32))
-                                    )
+                                )
                             }
                             for p in doc.chunks
                         ],
                     }
                 }
                 yield action
+
         helpers.bulk(self.es, iterarte(), chunk_size=self.n)
         self.es.indices.refresh(index=self.name)
 
@@ -69,6 +76,22 @@ class ElkSearch(Searcher):
         q_vec = self.model.infer([text])[0]
         lsh = " ".join(self.lsh_g.indexable_transform(q_vec))
         return lsh
+
+    def get(self):
+        q = {
+            "query": {
+                "match_all": {}
+            }
+        }
+
+        jres = self.es.search(index=self.name, body=q)
+
+        items = []
+        for r in jres["hits"]["hits"]:
+            d = SearchResult(id=r["_id"], text=" ... ".join(r.get("highlight", {}).get("text", [])))
+            items.append(d)
+
+        return items
 
     def search(self, text: str) -> SearchResults:
         lsh = self.infer(text)
@@ -114,3 +137,8 @@ class ElkSearch(Searcher):
             items.append(d)
 
         return items
+
+
+if __name__ == "__main__":
+    s = ElkSearch("hello")
+    s.recreate_index()

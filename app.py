@@ -4,16 +4,16 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.templating import Jinja2Templates
 
-from indexed_docs.indexed_doc import IndexedDoc
 from indexed_docs.indexed_docs import IndexedDocs
 from searcher import searcher
 from searcher.searcher import Searcher
-from utils.types import SearchResults
+from utils.model import SearchResults, IndexedDoc
 import logging
 
 
 logging.basicConfig(level=INFO)
 logger = logging.getLogger()
+docs = IndexedDocs()
 
 se: Searcher = searcher
 
@@ -46,13 +46,24 @@ def search(query: str = None):
     return items
 
 
-docs = IndexedDocs()
+@app.get("/get")
+def search():
+    items: SearchResults = se.get()
+    logger.info(f"got data {items}")
+    return items
 
 
-@app.post("/index/")
+@app.post("/index")
 def index(doc: IndexedDoc):
     logger.info(f"got doc: {doc}")
     docs.add_doc(doc)
+    searcher.index(docs)
+
+
+@app.post("/commit")
+def commit():
+    logger.info(f"committing {IndexedDocs}")
+    docs.force = True
     searcher.index(docs)
 
 

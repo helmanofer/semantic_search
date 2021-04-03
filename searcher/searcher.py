@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from utils.conf_util import read_app_yaml
 from indexed_docs.indexed_docs import IndexedDocs
-from utils.types import SearchResults
+from utils.model import SearchResults
 
 
 class Searcher(ABC):
@@ -15,4 +15,8 @@ class Searcher(ABC):
 
     @abstractmethod
     def index(self, index_docs: IndexedDocs):
+        pass
+
+    @abstractmethod
+    def commit(self):
         pass

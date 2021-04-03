@@ -1,7 +1,6 @@
-from indexed_docs.indexed_doc import IndexedDoc
-from text_processors.chunk import Chunk
-from text_processors.split import Split
-from typing import Iterable, Type, Union, List, Optional
+from typing import List
+
+from utils.model import IndexedDoc
 
 
 class IndexedDocs:
@@ -9,13 +8,24 @@ class IndexedDocs:
         self._doc_iter = None
         self.indexed_docs: list = []
         self.bulk_size: int = 100
+        self._force: bool = False
 
     def add_doc(self, doc: IndexedDoc):
         self.indexed_docs.append(doc)
 
     def get_bulk(self) -> List[IndexedDoc]:
-        if len(self.indexed_docs) < self.bulk_size:
+        if not self.force and len(self.indexed_docs) < self.bulk_size:
             yield []
         else:
-            yield self.indexed_docs
+            for doc in self.indexed_docs:
+                yield doc
             self.indexed_docs = []
+
+    @property
+    def force(self):
+        yield self._force
+        self._force = False
+
+    @force.setter
+    def force(self, force: bool):
+        self._force = force

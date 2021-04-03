@@ -1,4 +1,4 @@
-from indexed_docs.indexed_doc import IndexedDoc
+from utils.model import IndexedDoc
 
 
 def test_with_chunks_and_embeddings():

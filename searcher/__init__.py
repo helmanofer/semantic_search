@@ -1,16 +1,16 @@
 __all__ = [
     'ElkSearch',
     'AnnoyLevelSearch',
-    'Searcher',
+    # 'Searcher',
     'searcher',
-    'embedding'
+    'embedding',
 ]
 
-from embeddings import embedding
 from searcher.elk_search_engine import ElkSearch
 from searcher.annoy_level_search_engine import AnnoyLevelSearch
-from searcher.searcher import Searcher
+# from searcher.searcher import Searcher
 from utils.conf_util import read_app_yaml
+from embeddings import embedding
 
 conf = read_app_yaml()
 name = conf['name']
@@ -23,4 +23,4 @@ def get_searcher():
     raise Exception(f"{sconf} is not implemented")
 
 
-searcher: Searcher = get_searcher()
+searcher = get_searcher()
